@@ -1,0 +1,23 @@
+---
+driver:
+  name: vagrant
+driver_config:
+  http_proxy: http://192.168.168.71:3128
+  ftp_proxy: http://192.168.168.71:3128
+  https_proxy: http://192.168.168.71:3128
+
+provisioner:
+  name: chef_solo
+  solo_rb:
+    http_proxy: http://192.168.168.71:3128
+    ftp_proxy: http://192.168.168.71:3128
+    https_proxy: http://192.168.168.71:3128
+
+platforms:
+  - name: centos-6.5
+
+suites:
+  - name: default
+    run_list:
+      - recipe[wordpress::default]
+    attributes:
