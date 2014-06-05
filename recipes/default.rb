@@ -12,7 +12,7 @@ include_recipe 'mysql::server'
 include_recipe 'php::default'
 include_recipe 'database::mysql'
 
-remote_file "#{Chef::Config[:file_cache_path]}/#{node[:wordpress][:filename]}.tar.gz" do
+remote_file "#{Chef::Config[:file_cache_path]}/#{node[:wordpress][:filename]}" do
   action :create
   owner 'root'
   group 'root'
@@ -23,7 +23,7 @@ end
 execute 'wordpress_extract' do
   user 'root'
   cwd Chef::Config[:file_cache_path]
-  command "tar xvzf #{node[:wordpress][:filename]}.tar.gz"
+  command "tar xvzf #{node[:wordpress][:filename]}"
   action :run
   not_if { ::Dir.exist?("#{Chef::Config[:file_cache_path]}/wordpress")}
 end
@@ -34,15 +34,15 @@ mysql_connection_info = {
   :password => node[:mysql][:server_root_password]
 }
 
-mysql_database 'db_wordpress' do
+mysql_database node[:wordpress][:db_name] do
   connection mysql_connection_info
   action :create
 end
 
-mysql_database_user 'wp_user' do
+mysql_database_user node[:wordpress][:user] do
   connection    mysql_connection_info
-  password      'wp_password'
-  database_name 'db_wordpress'
+  password      node[:wordpress][:db_password]
+  database_name node[:wordpress][:db_name]
   host          '%'
   privileges    [:all]
   action        :grant
