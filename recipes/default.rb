@@ -47,3 +47,18 @@ mysql_database_user node[:wordpress][:user] do
   privileges    [:all]
   action        :grant
 end
+
+execute "mover_wp_dir" do
+  user 'root'
+  cwd Chef::Config[:file_cache_path]
+  command "mv wordpress #{node[:wordpress][:dir]}"
+  action :run
+  not_if { ::Dir.exist?("#{node[:wordpress][:dir]}/wordpress")}
+end
+
+execute "permisos_wp_dir" do
+  user 'root'
+  cwd node[:wordpress][:dir]
+  command "chown -R #{node['apache']['user']}. wordpress"
+  action :run
+end
