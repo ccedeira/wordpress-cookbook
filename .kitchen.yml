@@ -15,10 +15,9 @@ provisioner:
 
 platforms:
   - name: centos-6.5
-   driver:
+    driver:
       network:
       - ["forwarded_port", {guest: 80, host: 8181}]
-
 suites:
   - name: default
     run_list:
