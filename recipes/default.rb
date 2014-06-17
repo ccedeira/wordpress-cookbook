@@ -84,7 +84,7 @@ else
   end
 end
 
-template "#{node[:wordpress][:destination]}/wordpress/wp-config.php" do
+template "#{node[:wordpress][:dir]}/wordpress/wp-config.php" do
   source 'wp-config.php.erb'
   mode 0755
   owner 'root'
