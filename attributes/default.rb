@@ -6,3 +6,7 @@ default[:wordpress][:db_name] = 'db_wordpress'
 default[:wordpress][:user] = 'wp_user'
 default[:wordpress][:db_password] = 'wp_password'
 default[:wordpress][:dir] = "/var/www/html/"
+default[:wordpress][:username] = 'wordpress'
+default[:wordpress][:title] = 'Blog Wordpress'
+default[:wordpress][:password] = 'password'
+default[:wordpress][:mail] = 'test@wordpress.com'
