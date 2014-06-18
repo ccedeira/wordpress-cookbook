@@ -5,13 +5,14 @@ driver_config:
   http_proxy: http://192.168.168.71:3128
   ftp_proxy: http://192.168.168.71:3128
   https_proxy: http://192.168.168.71:3128
-
+  no_proxy: "localhost,127.0.0.1"
 provisioner:
   name: chef_solo
   solo_rb:
     http_proxy: http://192.168.168.71:3128
     ftp_proxy: http://192.168.168.71:3128
     https_proxy: http://192.168.168.71:3128
+    no_proxy: "localhost,127.0.0.1"
 
 platforms:
   - name: centos-6.5

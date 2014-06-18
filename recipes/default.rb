@@ -19,6 +19,7 @@ end
 %w(php-imap php-mysql php-mbstring).each do |pkg|
   package pkg do
     action :install
+    notifies :restart, "service[apache2]", :immediately 
   end
 end
 
@@ -49,7 +50,7 @@ mysql_database node[:wordpress][:db_name] do
   action :create
 end
 
-mysql_database_user node[:wordpress][:user] do
+mysql_database_user node[:wordpress][:db_user] do
   connection    mysql_connection_info
   password      node[:wordpress][:db_password]
   database_name node[:wordpress][:db_name]
@@ -97,8 +98,14 @@ template "#{node[:wordpress][:dir]}/wordpress/wp-config.php" do
   )
 end
 
+hostsfile_entry '127.0.0.1' do
+  hostname  node[:wordpress][:domain]
+  unique  true
+  action :append
+end
+
 execute 'wordpress_install' do
-  command "curl -d \"weblog_title=#{node[:wordpress][:title]}&user_name=#{node[:wordpress][:username]}&admin_password=#{node[:wordpress][:password]}&admin_password2=#{node[:wordpress][:password]}&admin_email=#{node[:wordpress][:mail]}\" http://localhost/wordpress/wp-admin/install.php?step=2"
+  command "curl --noproxy wordpress -d \"weblog_title=#{node[:wordpress][:title]}&user_name=#{node[:wordpress][:username]}&admin_password=#{node[:wordpress][:password]}&admin_password2=#{node[:wordpress][:password]}&admin_email=#{node[:wordpress][:mail]}\" http://#{node[:wordpress][:domain]}/wordpress/wp-admin/install.php?step=2"
   action :run
   not_if "mysql --user=#{node[:wordpress][:db_user]} --password=#{node[:wordpress][:db_password]} #{node[:wordpress][:db_name]} -e \"SHOW TABLES; \" | grep wp_options"
 end
